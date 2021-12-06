@@ -1,11 +1,13 @@
 import os
 import numpy as np
 import pandas as pd
-import string
+import random
 ''' Contributors: Derek Logan
 ----------------------------------------------------------------------------------------------
 racetrack's job is to first read in the racetracks from .txt files in its first method and then
-    to format a puzzle when given a matrix as a parameter. 
+    to format a puzzle when given a matrix as a parameter. This class also contains methods for
+    returning a random starting position and finding the nearest track point for the mild crash
+    paradigm. 
 ----------------------------------------------------------------------------------------------
 '''
 
@@ -27,15 +29,41 @@ class racetrack:
             racetracks.append(f)
         return racetracks
 
+# --------------------------------------------------------------------------------------------
+    # The startFinish() method takes a track and returns the coordinates of the start and finish
+    # points in a list. 
     @staticmethod
     def startFinish(track):
         starts = []
         finishes = []
+        walls = []
+        trackPoints = []
         for i, row in enumerate(track):
             for j, val in enumerate(row):
                 if val == 'S':
                     starts.append((i,j))
                 elif val == 'F':
                     finishes.append((i,j))
-        
-        return(starts, finishes)
+                elif val == '#':
+                    walls.append((i,j))
+                elif val == '.':
+                    trackPoints.append((i,j))
+
+        return(starts, finishes, walls, trackPoints)
+
+# --------------------------------------------------------------------------------------------
+    # The starting() method takes the list of possible locations and picks one at random 
+    @staticmethod
+    def starting(starts):
+        start = random.choice(starts)
+        return(start)
+
+# --------------------------------------------------------------------------------------------
+    # The nearestPoint() method is used in the 'mild' crash paradigm and finds the nearest point
+    # on the racetrack for resetting the car on the track. This method takes in the position of 
+    # the crash and returns the point to place the car. 
+    @staticmethod
+    def nearestPoint(position):
+        pass
+
+    
