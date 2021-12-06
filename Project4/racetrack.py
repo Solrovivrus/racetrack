@@ -12,7 +12,8 @@ racetrack's job is to first read in the racetracks from .txt files in its first 
 '''
 
 class racetrack:
-    
+# --------------------------------------------------------------------------------------------
+    # The racetrackBuilder() method reads in all racetracks and stores them in np arrays
     @staticmethod
     def racetrackBuilder(folder):
         
@@ -65,5 +66,16 @@ class racetrack:
     @staticmethod
     def nearestPoint(position):
         pass
+
+# --------------------------------------------------------------------------------------------
+    # The didYouCrash() method checks to see if the point the car moved to is in fact a wall.
+    # If it is in the wall list, True will be returned, if not, False will be returned
+    @staticmethod
+    def didYouCrash(wallList, position):
+        if position in wallList:
+            return True
+        else:
+            return False
+
 
     
