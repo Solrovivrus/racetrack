@@ -10,7 +10,6 @@ racetrack's job is to first read in the racetracks from .txt files in its first 
     paradigm. 
 ----------------------------------------------------------------------------------------------
 '''
-
 class racetrack:
 # --------------------------------------------------------------------------------------------
     # The racetrackBuilder() method reads in all racetracks and stores them in np arrays
@@ -84,6 +83,7 @@ class racetrack:
             return True
         else:
             return False
+################## NEED TO THINK ABOUT GOING OFF GAME BOARD
 
 # --------------------------------------------------------------------------------------------
     # The didYouFinish() method checks to see whether or not the point the car has moved to is
@@ -94,8 +94,7 @@ class racetrack:
             return True
         else:
             return False
-################## NEED TO UPDATE TO INCLUDE IF CAR GOES PAST FINISH LINE NOT JUST LANDS ON IT
-
+################## NEED TO UPDATE TO INCLUDE IF CAR GOES 'PAST' FINISH LINE NOT JUST LANDS ON IT
 
 
 # --------------------------------------------------------------------------------------------
@@ -109,12 +108,35 @@ class racetrack:
         # new position is created based off velocity and old position
         newPosition = [oldPosition[0] + velocity[0], oldPosition[1] + velocity[1]]
 
-        if racetrack.didYouFinish(finishes, newPosition):
-            return True
-        elif racetrack.didYouCrash(walls, newPosition):
-            return False
-        else:
-            return newPosition
+        # getting list of positions moved through
+        # x coordinates
+        if newPosition[0] >= oldPosition[0]:
+            xRange = list(range(oldPosition[0], newPosition[0]+1))
+        elif newPosition[0] < oldPosition[0]:
+            xRange = list(range(newPosition[0], oldPosition[0]-1, -1))
+        # y coordinates
+        if newPosition[1] >= oldPosition[1]:
+            yRange = list(range(oldPosition[1], newPosition[1]+1))
+        elif newPosition[1] < oldPosition[1]:
+            yRange = list(range(newPosition[1], oldPosition[1]-1, -1))
+
+        movedThrough = []
+        for x,y in zip(xRange, yRange):
+            movedThrough.append(list(x,y))
+        
+        movedThrough.append(newPosition)
+
+        for position in movedThrough:
+            if racetrack.didYouFinish(finishes, position):
+                return True
+
+        for position in movedThrough:
+            if racetrack.didYouCrash(walls, position):
+                return False
+        
+
+        return newPosition
+        
 
 # --------------------------------------------------------------------------------------------
     # The velocity() class updates the vehicles velocity. 
