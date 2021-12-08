@@ -94,3 +94,50 @@ class racetrack:
             return True
         else:
             return False
+################## NEED TO UPDATE TO INCLUDE IF CAR GOES PAST FINISH LINE NOT JUST LANDS ON IT
+
+
+
+# --------------------------------------------------------------------------------------------
+    # The vroomVroom() class actually moves the car in the racetrack. The racetrack takes in the
+    # current velocity and determines if the car moved to another track point, crashes, or comes 
+    # to the finish line. 
+    @staticmethod
+    def vroomVroom(currentPosition, velocity, points, finishes, walls):
+        # current position becomes the old position
+        oldPosition = currentPosition
+        # new position is created based off velocity and old position
+        newPosition = [oldPosition[0] + velocity[0], oldPosition[1] + velocity[1]]
+
+        if racetrack.didYouFinish(finishes, newPosition):
+            return True
+        elif racetrack.didYouCrash(walls, newPosition):
+            return False
+        else:
+            return newPosition
+
+# --------------------------------------------------------------------------------------------
+    # The velocity() class updates the vehicles velocity. 
+    @staticmethod
+    def velocity(acceleration, velocity):
+        # easy enough, velocity updates by adding proposed acceleration 
+        newX = velocity[0] + acceleration[0]
+        newY = velocity[1] + acceleration[1]
+        proposed = [newX, newY]
+
+        # also need to check if in limit of -5 to 5
+        if abs(newX) <= 5 and abs(newY) <= 5:
+            velocity = proposed
+            return velocity
+        else:
+            return velocity
+
+
+
+        
+    
+            
+
+        
+
+
