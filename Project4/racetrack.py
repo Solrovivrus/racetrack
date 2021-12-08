@@ -17,7 +17,7 @@ class racetrack:
     @staticmethod
     def racetrackBuilder(folder):
         
-        folderPath = os.path.join("/Users/bigd/Desktop/MSU/CSCI 446/Project4", folder)
+        folderPath = os.path.join("C:\\Users\dlogan\Desktop\CSCI446\Project4", folder)
 
         racetracks = []
         for file in os.listdir(folderPath):
@@ -64,8 +64,16 @@ class racetrack:
     # on the racetrack for resetting the car on the track. This method takes in the position of 
     # the crash and returns the point to place the car. 
     @staticmethod
-    def nearestPoint(position):
-        pass
+    def nearestPoint(position, trackLocations):
+        currentPosition = np.array(position)
+        trackLocations = np.array(trackLocations)
+        distance = np.sum(np.square(trackLocations - currentPosition), axis=1)
+        nearest = np.argmin(distance)
+        print(nearest)
+        print(trackLocations)
+        nearestTrack = trackLocations[nearest]
+
+        return nearestTrack
 
 # --------------------------------------------------------------------------------------------
     # The didYouCrash() method checks to see if the point the car moved to is in fact a wall.
@@ -77,5 +85,12 @@ class racetrack:
         else:
             return False
 
-
-    
+# --------------------------------------------------------------------------------------------
+    # The didYouFinish() method checks to see whether or not the point the car has moved to is
+    # a finish line space or not
+    @staticmethod
+    def didYouFinish(finishList, position):
+        if position in finishList:
+            return True
+        else:
+            return False
