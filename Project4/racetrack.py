@@ -102,7 +102,7 @@ class racetrack:
     # current velocity and determines if the car moved to another track point, crashes, or comes 
     # to the finish line. 
     @staticmethod
-    def vroomVroom(currentPosition, velocity, points, finishes, walls):
+    def vroomVroom(currentPosition, velocity, points, finishes, walls, startingPos):
         # current position becomes the old position
         oldPosition = currentPosition
         # new position is created based off velocity and old position
@@ -122,20 +122,21 @@ class racetrack:
 
         movedThrough = []
         for x,y in zip(xRange, yRange):
-            movedThrough.append(list(x,y))
+            movedThrough.append(list((x,y)))
         
-        movedThrough.append(newPosition)
-
-        for position in movedThrough:
-            if racetrack.didYouFinish(finishes, position):
-                return True
-
+        # returning false and original starting position to reset for mild crash
         for position in movedThrough:
             if racetrack.didYouCrash(walls, position):
-                return False
-        
+                newPosition = startingPos
+                return False, newPosition
 
-        return newPosition
+        movedThrough.append(newPosition)
+        print(movedThrough)
+        for position in movedThrough:
+            if racetrack.didYouFinish(finishes, position):
+                return True, newPosition
+
+        return False, newPosition
         
 
 # --------------------------------------------------------------------------------------------
