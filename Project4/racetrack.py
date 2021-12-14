@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 import random
-''' Contributors: Derek Logan
+''' Contributors: Derek Logan, Alyse Mize
 ----------------------------------------------------------------------------------------------
 racetrack's job is to first read in the racetracks from .txt files in its first method and then
     to format a puzzle when given a matrix as a parameter. This class also contains methods for
@@ -95,6 +95,66 @@ class racetrack:
         else:
             return False
 ################## NEED TO UPDATE TO INCLUDE IF CAR GOES 'PAST' FINISH LINE NOT JUST LANDS ON IT
+
+# --------------------------------------------------------------------------------------------
+    # The updateTrack() class is similar to the vroomvroom class as it also moves the car in the racetrack.
+    # However, it is instead used just for the SARSA class as it returns to SARSA the updated track with the new
+    # position and updates some key values, such as the reward system.  It checks whether or not the car crashed into a
+    # a wall or crossed the finish line and returns bad/good rewards for doing so.  After which it will return the new
+    # position to then be graded by the SARSA algorithm training.
+    @staticmethod
+    def updateTrack(currentPosition, velocity, possAccel, finishes, walls, racetracks):
+        reward = 0
+        # current position becomes the old position
+        oldPosition = currentPosition
+        # new position is created based off velocity and old position
+        newPosition = [oldPosition[0] + velocity[0], oldPosition[1] + velocity[1]]
+
+        # getting list of positions moved through
+        # x coordinates
+        if newPosition[0] >= oldPosition[0]:
+            xRange = list(range(oldPosition[0], newPosition[0] + 1))
+        elif newPosition[0] < oldPosition[0]:
+            xRange = list(range(newPosition[0], oldPosition[0] - 1, -1))
+        # y coordinates
+        if newPosition[1] >= oldPosition[1]:
+            yRange = list(range(oldPosition[1], newPosition[1] + 1))
+        elif newPosition[1] < oldPosition[1]:
+            yRange = list(range(newPosition[1], oldPosition[1] - 1, -1))
+
+        movedThrough = []
+        for x, y in zip(xRange, yRange):
+            movedThrough.append(list(x, y))
+
+        movedThrough.append(newPosition)
+
+        for position in movedThrough:
+            if racetrack.didYouFinish(finishes, position):
+                reward = 1
+                return True
+
+        for position in movedThrough:
+            if racetrack.didYouCrash(walls, position):
+                newPosition = racetrack.pickCrashType(currentPosition, movedThrough, racetracks)
+                reward = -1
+
+        velocity = racetrack.velocity(possAccel, velocity)
+
+        return newPosition, velocity, currentPosition.didYouFinish, reward
+    
+   # --------------------------------------------------------------------------------------------
+    # This function works with the updateTrack function to test whether it is a soft or hard crash after the car hits a
+    # wall.  Depending on the outcome the car either starts at the beginning or starts at the nearest position.
+    def pickCrashType(currentPosition, trackLocations, racetracks):
+        race = racetrack
+        lStarts, lFinishes, lWalls, lPoints = race.startFinish(racetracks)
+        crashTypes = ["harshCrash", "softCrash"]
+        pickCrash = random.choice(crashTypes)
+        if pickCrash == "softCrash":
+            currentPosition = race.nearestPoint(currentPosition, trackLocations)
+        if pickCrash == "harshCrash":
+            currentPosition = race.starting(lStarts)
+        return currentPosition
 
 
 # --------------------------------------------------------------------------------------------
