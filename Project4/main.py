@@ -1,9 +1,11 @@
 from racetrack import racetrack
 from valueIteration import valueIteration
+from SARSA import SARSA
 import numpy as np
 import string
 import random
 
+Sar = SARSA
 race = racetrack
 tracks = race.racetrackBuilder('tracks')
 
@@ -18,3 +20,4 @@ lStarts, lFinishes, lWalls, lPoints = race.startFinish(l)
 lStartingPoint = race.starting(lStarts)
 
 valueIteration.valMain(l, lPoints, lFinishes, lWalls, lStartingPoint)
+Sar.trainCar(l)
